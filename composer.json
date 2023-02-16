@@ -1,0 +1,18 @@
+{
+	"autoload": {
+		"psr-4": {
+			"App\\": [
+				"classes/"
+			]
+		}
+	},
+	"require": {
+		"php": ">=7.1",
+		"ubnt/ucrm-plugin-sdk": "~0.4"
+	},
+	"config": {
+		"platform": {
+			"php": "7.3"
+		}
+	}
+}
