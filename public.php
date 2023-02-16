@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-set_time_limit(0);
 
 use App\Service\PdfRegenerator;
 use App\Service\TemplateRenderer;
@@ -66,3 +65,5 @@ $renderer->render(
         'ucrmPublicUrl' => $optionsManager->loadOptions()->ucrmPublicUrl,
     ]
 );
+
+set_time_limit(0);

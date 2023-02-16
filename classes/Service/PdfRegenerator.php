@@ -6,7 +6,6 @@ namespace App\Service;
 
 use Ubnt\UcrmPluginSdk\Service\UcrmApi;
 
-set_time_limit(0);
 class PdfRegenerator
 {
     /**
@@ -34,3 +33,5 @@ class PdfRegenerator
         }
     }
 }
+
+set_time_limit(0);
