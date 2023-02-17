@@ -47,6 +47,17 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
 
     $invoices = $api->get('invoices', $parameters);
 
+    $pdfRegenerator->generateView($invoices);
+
+    exit;
+}
+
+// Process regenerate request.
+if (array_key_exists('regenerate', $_GET)) {
+    $pdfRegenerator = new PdfRegenerator($api);
+
+    $invoices = $api->get('invoices', ['id' => $_GET['regenerate']]);
+
     $pdfRegenerator->regenerate($invoices);
 
     exit;
