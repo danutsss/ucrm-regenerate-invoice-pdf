@@ -13,6 +13,9 @@ chdir(__DIR__);
 
 require __DIR__ . '/vendor/autoload.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 // Retrieve API connection.
 $api = new UcrmApi();
 
@@ -30,6 +33,8 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
         'createdDateFrom' => $_GET['since'],
         'createdDateTo' => $_GET['until'],
         'proforma' => 0,
+        'customAttributeKey' => 'factRegenerata',
+        'customAttributeValue' => '0',
     ];
 
     // make sure the dates are in YYYY-MM-DD format
@@ -63,6 +68,7 @@ if (array_key_exists('regenerate', $_GET)) {
     foreach ($_GET['regenerate'] as $invoiceId) {
         try {
             $pdfRegenerator->regeneratePdf(intval($invoiceId));
+            $pdfRegenerator->updateInvoice(intval($invoiceId));
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }

@@ -3,5 +3,4 @@ data/
 ucrm.json
 .ucrm-plugin-running
 .ucrm-plugin-execution-requested
-
-classes/Service/UcrmApi.php
+.env
