@@ -22,22 +22,33 @@
                     <div class="card-body">
                         <form id="export-form">
                             <div class="align-items-end">
-                                <div>
-                                    <!-- create a table with all of the invoices -->
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Invoice #</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Organization</th>
-                                                <th scope="col">Regenerate</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            foreach ($invoices as $invoice) {
-                                                printf(
-                                                    '<tr>
+                                <div class="form-row">
+                                    <div class="col-6 input-group">
+                                        <input type="number" class="form-control form-control-sm" id="frm-select-all" name="frm-select-all" placeholder="Input selection value" />
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary btn-sm pl-4 pr-4" type="submit">Regenerate</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                # of invoices: <?= count($invoices) ?>
+
+
+                                <!-- create a table with all of the invoices -->
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Invoice #</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Organization</th>
+                                            <th scope="col">Regenerate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        foreach ($invoices as $invoice) {
+                                            printf(
+                                                '<tr>
                                                         <td>%s (id: %s)</td>
                                                         <td>%s</td>
                                                         <td>%s</td>
@@ -48,62 +59,37 @@
                                                         </td>
                                                     </tr>
                                                     ',
-                                                    $invoice['number'],
-                                                    $invoice['id'],
-                                                    $invoice['createdDate'],
-                                                    $invoice['organizationName'],
-                                                    $invoice['id']
-                                                );
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-
-                                    <div class="col-auto ml-auto">
-                                        <select class="form-control-sm mr-2" id="frm-select-all">
-                                            <option value="-1">Select</option>
-                                            <option value="0">Select 30</option>
-                                            <option value="1">Select 50</option>
-                                            <option value="2">Select 100</option>
-                                        </select>
-                                        <button type="submit" class="btn btn-primary btn-sm pl-4 pr-4">Regenerate</button>
-                                    </div>
-                                </div>
+                                                $invoice['number'],
+                                                $invoice['id'],
+                                                $invoice['createdDate'],
+                                                $invoice['organizationName'],
+                                                $invoice['id']
+                                            );
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 
     <script>
-        document.getElementById('frm-select-all').addEventListener('change', function() {
-            var checkboxes = document.getElementsByName('regenerate[]');
-            if (this.value == 0) {
-                for (var i = 0; i < checkboxes.length; i++) {
-                    if (i < 30) {
-                        checkboxes[i].checked = true;
-                    } else {
-                        checkboxes[i].checked = false;
-                    }
-                }
-            } else if (this.value == 1) {
-                for (var i = 0; i < checkboxes.length; i++) {
-                    if (i < 50) {
-                        checkboxes[i].checked = true;
-                    } else {
-                        checkboxes[i].checked = false;
-                    }
-                }
-            } else if (this.value == 2) {
-                for (var i = 0; i < checkboxes.length; i++) {
-                    if (i < 100) {
-                        checkboxes[i].checked = true;
-                    } else {
-                        checkboxes[i].checked = false;
-                    }
-                }
+        // When user inputs a value in the field, select the number of checkboxes equal to the value.
+        document.getElementById('frm-select-all').addEventListener('input', function() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            var value = parseInt(this.value);
+
+            if (value > checkboxes.length) {
+                value = checkboxes.length;
+            }
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = i < value;
             }
         });
     </script>
