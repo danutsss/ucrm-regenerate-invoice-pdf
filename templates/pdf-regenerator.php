@@ -23,13 +23,16 @@
                         <form id="export-form">
                             <div class="align-items-end">
                                 <div class="form-row">
-                                    <div class="col-6 input-group">
-                                        <input type="number" class="form-control form-control-sm" id="frm-select-all" name="frm-select-all" placeholder="Input selection value" />
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary btn-sm pl-4 pr-4" type="submit">Regenerate</button>
-                                        </div>
+                                    <div class="col-6">
+                                        <label for="frm-select-all">Select # of invoices to generate:</label>
+                                        <input type="range" class="custom-range" id="frm-select-all" min="0" max="<?= count($invoices) ?>" value="0" step="1">
+                                        <button class="btn btn-primary btn-sm pl-4 pr-4" type="submit">Regenerate</button>
+                                        <br />
+                                        Selected number of invoices: <span id="frm-select-all-value" class="fw-bold"></span>
                                     </div>
                                 </div>
+
+                                <br />
 
                                 # of invoices: <?= count($invoices) ?>
 
@@ -70,26 +73,23 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
-    </div>
 
     <script>
-        // When user inputs a value in the field, select the number of checkboxes equal to the value.
+        // Based on the value of the range slider, select checkboxes.
         document.getElementById('frm-select-all').addEventListener('input', function() {
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            var value = parseInt(this.value);
-
-            if (value > checkboxes.length) {
-                value = checkboxes.length;
-            }
-
+            var value = this.value;
             for (var i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].checked = i < value;
+
+                // Update the value of the range slider.
+                document.getElementById('frm-select-all-value').innerText = value;
             }
         });
     </script>
