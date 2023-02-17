@@ -48,7 +48,7 @@
                                 </div>
 
                                 <div class="col-auto ml-auto">
-                                    <button type="submit" class="btn btn-primary btn-sm pl-4 pr-4">Regenerate</button>
+                                    <button type="submit" class="btn btn-primary btn-sm pl-4 pr-4">See invoices</button>
                                 </div>
                             </div>
                         </form>
