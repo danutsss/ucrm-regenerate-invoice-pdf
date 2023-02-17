@@ -20,15 +20,21 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form id="export-form">
+                        <form id="regenerate-form">
                             <div class="align-items-end">
                                 <div class="form-row">
-                                    <div class="col-6">
-                                        <label for="frm-select-all">Select # of invoices to generate:</label>
-                                        <input type="range" class="custom-range" id="frm-select-all" min="0" max="<?= count($invoices) ?>" value="0" step="1">
-                                        <button class="btn btn-primary btn-sm pl-4 pr-4" type="submit">Regenerate</button>
-                                        <br />
-                                        Selected number of invoices: <span id="frm-select-all-value" class="fw-bold"></span>
+                                    <div class="col-3">
+                                        <label class="mb-0" for="frm-from"><small>From invoice #:</small></label>
+                                        <input type="number" name="from" id="frm-from" placeholder="X" class="form-control form-control-sm" min="0" value="0" max="<?= count($invoices) ?>">
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="mb-0" for="frm-to"><small>To Invoice #:</small></label>
+                                        <input type="number" name="to" id="frm-to" placeholder="Y" class="form-control form-control-sm" min="0" max="<?= count($invoices) ?>">
+                                    </div>
+
+                                    <div class="col-auto ml-auto">
+                                        <button type="submit" class="btn btn-primary btn-sm pl-4 pr-4">Regenerate</button>
                                     </div>
                                 </div>
 
@@ -81,15 +87,32 @@
     </div>
 
     <script>
-        // Based on the value of the range slider, select checkboxes.
-        document.getElementById('frm-select-all').addEventListener('input', function() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            var value = this.value;
-            for (var i = 0; i < checkboxes.length; i++) {
-                checkboxes[i].checked = i < value;
+        const rangeForm = document.getElementById('regenerate-form');
 
-                // Update the value of the range slider.
-                document.getElementById('frm-select-all-value').innerText = value;
+        rangeForm.addEventListener('change', () => {
+            const from = document.getElementById('frm-from').value;
+            const to = document.getElementById('frm-to').value;
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (i >= from && i <= to) {
+                    checkboxes[i].checked = true;
+                } else {
+                    checkboxes[i].checked = false;
+                }
+
+                if (from > to) {
+                    checkboxes[i].checked = false;
+                }
+
+                if (from == 0 && to == 0) {
+                    checkboxes[i].checked = false;
+                }
+
+                if (from == 0 && to == checkboxes.length) {
+                    checkboxes[i].checked = true;
+                }
             }
         });
     </script>
