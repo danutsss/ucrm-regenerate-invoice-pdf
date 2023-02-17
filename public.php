@@ -59,28 +59,15 @@ if (array_key_exists('regenerate', $_GET)) {
         'id' => $_GET['regenerate'],
     ];
 
-
-    // If there are more than 100 invoices, we need to split the regeneration request into multiple regeneration requests.
-    if (count($_GET['regenerate']) > 100) {
-        $chunks = array_chunk($_GET['regenerate'], 100);
-
-        foreach ($chunks as $chunk) {
-            var_dump($chunk);
-
-            foreach ($chunk as $invoiceId) {
-                try {
-                    $pdfRegenerator->regeneratePdf(intval($invoiceId));
-                } catch (\Exception $e) {
-                    var_dump($e->getMessage());
-                }
-            }
-        }
-    } else {
+    $count = 0;
+    foreach ($_GET['regenerate'] as $invoiceId) {
         try {
-            $pdfRegenerator->regeneratePdf($_GET['regenerate']);
+            $pdfRegenerator->regeneratePdf(intval($invoiceId));
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }
+
+        $count++;
     }
 
     var_dump("Regenerated $count invoices.");
