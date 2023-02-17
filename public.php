@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Service\PdfRegenerator;
 use App\Service\TemplateRenderer;
+use App\Service\UcrmApi;
 use Ubnt\UcrmPluginSdk\Security\PermissionNames;
-use Ubnt\UcrmPluginSdk\Service\UcrmApi;
 use Ubnt\UcrmPluginSdk\Service\UcrmOptionsManager;
 use Ubnt\UcrmPluginSdk\Service\UcrmSecurity;
 
@@ -14,7 +14,7 @@ chdir(__DIR__);
 require __DIR__ . '/vendor/autoload.php';
 
 // Retrieve API connection.
-$api = UcrmApi::create();
+$api = new UcrmApi();
 
 // Ensure that user is logged in and has permission to view invoices.
 $security = UcrmSecurity::create();
@@ -29,7 +29,7 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
         'organizationId' => $_GET['organization'],
         'createdDateFrom' => $_GET['since'],
         'createdDateTo' => $_GET['until'],
-        'proforma' => false
+        'proforma' => 0,
     ];
 
     // make sure the dates are in YYYY-MM-DD format
@@ -45,7 +45,7 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
 
     $pdfRegenerator = new PdfRegenerator($api);
 
-    $invoices = $api->get('invoices', $parameters);
+    $invoices = $api::doRequest("invoices?" . http_build_query($parameters));
 
     $pdfRegenerator->generateView($invoices);
 
@@ -55,16 +55,25 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
 // Process regenerate request.
 if (array_key_exists('regenerate', $_GET)) {
     $pdfRegenerator = new PdfRegenerator($api);
+    $parameter = [
+        'id' => $_GET['regenerate'],
+    ];
 
-    $invoices = $api->get('invoices', ['id' => $_GET['regenerate']]);
 
-    $pdfRegenerator->regenerate($invoices);
+    $count = 0;
+    foreach ($_GET['regenerate'] as $invoiceId) {
+        $pdfRegenerator->regeneratePdf(intval($invoiceId));
+
+        $count++;
+    }
+
+    var_dump("Regenerated $count invoices.");
 
     exit;
 }
 
 // Render form.
-$organizations = $api->get('organizations');
+$organizations = $api::doRequest('organizations');
 
 $optionsManager = UcrmOptionsManager::create();
 

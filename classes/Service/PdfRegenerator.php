@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Ubnt\UcrmPluginSdk\Service\UcrmApi;
+use App\Service\UcrmApi;
 
 chdir(__DIR__);
 
@@ -17,7 +17,7 @@ class PdfRegenerator
 
     public function __construct(UcrmApi $ucrmApi)
     {
-        $this->ucrmApi = UcrmApi::create();
+        $this->ucrmApi = new UcrmApi();
     }
 
     public function generateView(array $invoices): void
@@ -32,18 +32,12 @@ class PdfRegenerator
         );
     }
 
-    public function regenerate(array $invoices): void
+    public function regeneratePdf(int $invoiceId): void
     {
-        foreach ($invoices as $invoice) {
-            $invoiceId = $invoice['id'];
-            $updateTemplate = $this->ucrmApi->patch("invoices/$invoiceId", [
-                'invoiceTemplateId' => 1000
-            ]);
-
-            $updatedTemplateId = $updateTemplate['id'];
-            $regeneratePdf = $this->ucrmApi->patch("invoices/$updatedTemplateId/regenerate-pdf");
-
-            var_dump($regeneratePdf);
+        try {
+            $this->ucrmApi::doRequest("invoices/$invoiceId/regenerate-pdf", 'PATCH');
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
         }
     }
 }

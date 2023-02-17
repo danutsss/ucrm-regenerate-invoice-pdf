@@ -15,7 +15,7 @@
     <div id="header">
         <h1>Select invoice to regenerate</h1>
     </div>
-    <div id="content" class="container container-fluid ml-0 mr-0">
+    <div id="content" class="container-fluid ml-0 mr-0">
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card">
@@ -42,8 +42,8 @@
                                                         <td>%s</td>
                                                         <td>%s</td>
                                                         <td>
-                                                            <div class="col-3">
-                                                                <input type="checkbox" name="regenerate" id="frm-regenerate" class="form-control form-control-sm" />
+                                                            <div>
+                                                                <input type="checkbox" name="regenerate[]" value="%s" />
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -52,6 +52,7 @@
                                                     $invoice['id'],
                                                     $invoice['createdDate'],
                                                     $invoice['organizationName'],
+                                                    $invoice['id']
                                                 );
                                             }
                                             ?>
@@ -59,6 +60,12 @@
                                     </table>
 
                                     <div class="col-auto ml-auto">
+                                        <select class="form-control-sm mr-2" id="frm-select-all">
+                                            <option value="-1">Select</option>
+                                            <option value="0">Select 30</option>
+                                            <option value="1">Select 50</option>
+                                            <option value="2">Select 100</option>
+                                        </select>
                                         <button type="submit" class="btn btn-primary btn-sm pl-4 pr-4">Regenerate</button>
                                     </div>
                                 </div>
@@ -69,4 +76,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('frm-select-all').addEventListener('change', function() {
+            var checkboxes = document.getElementsByName('regenerate[]');
+            if (this.value == 0) {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (i < 30) {
+                        checkboxes[i].checked = true;
+                    } else {
+                        checkboxes[i].checked = false;
+                    }
+                }
+            } else if (this.value == 1) {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (i < 50) {
+                        checkboxes[i].checked = true;
+                    } else {
+                        checkboxes[i].checked = false;
+                    }
+                }
+            } else if (this.value == 2) {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (i < 100) {
+                        checkboxes[i].checked = true;
+                    } else {
+                        checkboxes[i].checked = false;
+                    }
+                }
+            }
+        });
+    </script>
 </body>
