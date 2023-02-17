@@ -72,8 +72,6 @@ class PdfRegenerator
 
             $response = curl_exec($ch);
             curl_close($ch);
-
-            var_dump($response);
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }
