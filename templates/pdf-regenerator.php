@@ -39,7 +39,8 @@
                                 </div>
 
                                 <br />
-
+                                !! nu selecta mai mult de 150 de facturi, altfel vei primi timeout !!
+                                <br />
                                 # of invoices: <?= count($invoices) ?>
 
 
