@@ -33,5 +33,3 @@ class PdfRegenerator
         }
     }
 }
-
-set_time_limit(0);

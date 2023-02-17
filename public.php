@@ -65,5 +65,3 @@ $renderer->render(
         'ucrmPublicUrl' => $optionsManager->loadOptions()->ucrmPublicUrl,
     ]
 );
-
-set_time_limit(0);
