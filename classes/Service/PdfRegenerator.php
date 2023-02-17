@@ -6,6 +6,8 @@ namespace App\Service;
 
 use Ubnt\UcrmPluginSdk\Service\UcrmApi;
 
+chdir(__DIR__);
+
 class PdfRegenerator
 {
     /**
@@ -16,6 +18,18 @@ class PdfRegenerator
     public function __construct(UcrmApi $ucrmApi)
     {
         $this->ucrmApi = UcrmApi::create();
+    }
+
+    public function generateView(array $invoices): void
+    {
+        $renderer = new TemplateRenderer();
+        $renderer->render(
+            __DIR__ .
+                '/../../templates/pdf-regenerator.php',
+            [
+                'invoices' => $invoices,
+            ]
+        );
     }
 
     public function regenerate(array $invoices): void
