@@ -40,40 +40,4 @@ class PdfRegenerator
             var_dump($e->getMessage());
         }
     }
-
-    public function updateInvoice(int $invoiceId): void
-    {
-        try {
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, "{$_ENV['API_URL']}/invoices/$invoiceId");
-            curl_setopt($ch, CURLOPT_TIMEOUT, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_VERBOSE, true);
-
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "{
-                \"attributes\": [
-                    {
-                    \"value\": \"1\",
-                    \"customAttributeId\": 21
-                    }
-                ]
-                }");
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "Content-Type: application/json",
-                "X-Auth-App-Key: {$_ENV['API_KEY']}"
-            ));
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());
-        }
-    }
 }
