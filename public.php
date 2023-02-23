@@ -33,8 +33,6 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
         'createdDateFrom' => $_GET['since'],
         'createdDateTo' => $_GET['until'],
         'proforma' => 0,
-        'customAttributeKey' => 'factRegenerata',
-        'customAttributeValue' => '0',
     ];
 
     // make sure the dates are in YYYY-MM-DD format
@@ -67,8 +65,12 @@ if (array_key_exists('regenerate', $_GET)) {
     $count = 0;
     foreach ($_GET['regenerate'] as $invoiceId) {
         try {
-            $pdfRegenerator->regeneratePdf(intval($invoiceId));
-            $pdfRegenerator->updateInvoice(intval($invoiceId));
+            if (($count % 100) == 0) {
+                sleep(2);
+                $pdfRegenerator->regeneratePdf(intval($invoiceId));
+            } else {
+                $pdfRegenerator->regeneratePdf(intval($invoiceId));
+            }
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }
