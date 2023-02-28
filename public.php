@@ -34,6 +34,8 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
         'createdDateFrom' => $_GET['since'],
         'createdDateTo' => $_GET['until'],
         'proforma' => 0,
+        'customAttributeKey' => 'factRegenerata',
+        'customAttributeValue' => '0',
     ];
 
     // make sure the dates are in YYYY-MM-DD format
