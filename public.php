@@ -61,6 +61,7 @@ if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) 
 // Process regenerate request.
 if (array_key_exists('regenerate', $_GET)) {
     $pdfRegenerator = new PdfRegenerator($api);
+    $logger = new \App\Utility\Logger(new PluginLogManager());
     $parameter = [
         'id' => $_GET['regenerate'],
     ];
@@ -70,13 +71,16 @@ if (array_key_exists('regenerate', $_GET)) {
         try {
             if (($count % 100) == 0) {
                 sleep(2);
-                $pdfRegenerator->regeneratePdf(intval($invoiceId));
+                $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
             } else {
-                $pdfRegenerator->regeneratePdf(intval($invoiceId));
+                $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
+            }
+
+            if ($response) {
+                $logger->log(\Psr\Log\LogLevel::ERROR, "Regenerarea PDF-ului facturii cu ID-ul $invoiceId executata cu succes.");
+                $logger->log(\Psr\Log\LogLevel::ERROR, $response);
             }
         } catch (\Exception $e) {
-            $logger = new \App\Utility\Logger(new PluginLogManager());
-
             $logger->log(\Psr\Log\LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
             $logger->log(\Psr\Log\LogLevel::ERROR, $e->getMessage());
             $logger->log(\Psr\Log\LogLevel::ERROR, $e->getTraceAsString());
