@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Service\UcrmApi;
 use App\Service\PdfRegenerator;
 use App\Service\TemplateRenderer;
-use App\Service\UcrmApi;
-use Ubnt\UcrmPluginSdk\Security\PermissionNames;
-use Ubnt\UcrmPluginSdk\Service\UcrmOptionsManager;
 use Ubnt\UcrmPluginSdk\Service\UcrmSecurity;
+use Ubnt\UcrmPluginSdk\Security\PermissionNames;
+use Ubnt\UcrmPluginSdk\Service\PluginLogManager;
+use Ubnt\UcrmPluginSdk\Service\UcrmOptionsManager;
 
 chdir(__DIR__);
 
@@ -72,7 +73,11 @@ if (array_key_exists('regenerate', $_GET)) {
                 $pdfRegenerator->regeneratePdf(intval($invoiceId));
             }
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
+            $logger = new \App\Utility\Logger(new PluginLogManager());
+
+            $logger->log(\Psr\Log\LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
+            $logger->log(\Psr\Log\LogLevel::ERROR, $e->getMessage());
+            $logger->log(\Psr\Log\LogLevel::ERROR, $e->getTraceAsString());
         }
 
         $count++;
