@@ -17,7 +17,8 @@
 	"require": {
 		"php": ">=7.1",
 		"ubnt/ucrm-plugin-sdk": "~0.4",
-		"vlucas/phpdotenv": "^5.5"
+		"vlucas/phpdotenv": "^5.5",
+		"psr/log": "^1.1"
 	},
 	"config": {
 		"platform": {
