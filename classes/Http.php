@@ -8,10 +8,8 @@ class Http
 {
     public static function forbidden(): void
     {
-        if (!headers_sent()) {
-            header("HTTP/1.1 403 Forbidden");
-        }
-
-        die('You\'re not allowed to access this page.');
+        http_response_code(403);
+        echo 'You\'re not allowed to access this page.';
+        exit;
     }
 }
