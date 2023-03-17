@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Service\UcrmApi;
-use App\Utility\Logger;
-use Ubnt\UcrmPluginSdk\Service\PluginLogManager;
 
 chdir(__DIR__);
 
