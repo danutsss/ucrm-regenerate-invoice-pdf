@@ -71,7 +71,7 @@
                                                     ',
                                                 $invoice['number'],
                                                 $invoice['id'],
-                                                $invoice['createdDate'],
+                                                date_format(date_create($invoice['createdDate']), 'Y-m-d'),
                                                 $invoice['organizationName'],
                                                 $invoice['id']
                                             );

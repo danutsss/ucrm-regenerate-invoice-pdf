@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Http;
+use Dotenv\Dotenv;
+use Psr\Log\LogLevel;
+use App\Utility\Logger;
 use App\Service\UcrmApi;
 use App\Service\PdfRegenerator;
 use App\Service\TemplateRenderer;
@@ -14,71 +18,53 @@ chdir(__DIR__);
 
 require __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Retrieve API connection.
+// Instantiate API connection.
 $api = new UcrmApi();
 
 // Ensure that user is logged in and has permission to view invoices.
 $security = UcrmSecurity::create();
 $user = $security->getUser();
 if (!$user || $user->isClient || !$user->hasViewPermission(PermissionNames::BILLING_INVOICES)) {
-    \App\Http::forbidden();
+    Http::forbidden();
 }
 
 // Process submitted form.
-if (array_key_exists('organization', $_GET) && array_key_exists('since', $_GET) && array_key_exists('until', $_GET)) {
+if (isset($_GET['organization']) && isset($_GET['since']) && isset($_GET['until'])) {
     $parameters = [
         'organizationId' => $_GET['organization'],
-        'createdDateFrom' => $_GET['since'],
-        'createdDateTo' => $_GET['until'],
+        'createdDateFrom' => date_format(date_create($_GET['since']), 'Y-m-d'),
+        'createdDateTo' => date_format(date_create($_GET['until']), 'Y-m-d'),
         'proforma' => 0,
         'customAttributeKey' => 'factRegenerata',
         'customAttributeValue' => '0',
     ];
 
-    // make sure the dates are in YYYY-MM-DD format
-    if ($parameters['createdDateFrom']) {
-        $parameters['createdDateFrom'] = new \DateTimeImmutable($parameters['createdDateFrom']);
-        $parameters['createdDateFrom'] = $parameters['createdDateFrom']->format('Y-m-d');
-    }
-    if ($parameters['createdDateTo']) {
-        $parameters['createdDateTo'] = new \DateTimeImmutable($parameters['createdDateTo']);
-        $parameters['createdDateTo'] = $parameters['createdDateTo']->format('Y-m-d');
-    }
-
-
     $pdfRegenerator = new PdfRegenerator($api);
-
     $invoices = $api::doRequest("invoices?" . http_build_query($parameters));
-
     $pdfRegenerator->generateView($invoices);
 
     exit;
 }
 
 // Process regenerate request.
-if (array_key_exists('regenerate', $_GET)) {
+if (isset($_GET['regenerate'])) {
     $pdfRegenerator = new PdfRegenerator($api);
-    $logger = new \App\Utility\Logger(new PluginLogManager());
-    $parameter = [
-        'id' => $_GET['regenerate'],
-    ];
+    $logger = new Logger(new PluginLogManager());
+
+    $invoiceIds = is_array($_GET['regenerate']) ? $_GET['regenerate'] : [$_GET['regenerate']];
 
     $count = 0;
-    foreach ($_GET['regenerate'] as $invoiceId) {
+    foreach ($invoiceIds as $invoiceId) {
         try {
-            if (($count % 100) == 0) {
-                sleep(2);
-                $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
-            } else {
-                $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
-            }
+            sleep($count % 100 === 0 ? 2 : 0);
+            $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
         } catch (\Exception $e) {
-            $logger->log(\Psr\Log\LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
-            $logger->log(\Psr\Log\LogLevel::ERROR, $e->getMessage());
-            $logger->log(\Psr\Log\LogLevel::ERROR, $e->getTraceAsString());
+            $logger->log(LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
+            $logger->log(LogLevel::ERROR, $e->getMessage());
+            $logger->log(LogLevel::ERROR, $e->getTraceAsString());
         }
 
         $count++;
