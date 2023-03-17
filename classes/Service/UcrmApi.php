@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-require_once __DIR__ . "/../../vendor/autoload.php";
+use RuntimeException;
 
 class UcrmApi
 {
@@ -10,13 +10,14 @@ class UcrmApi
     /**
      * @param string $url
      * @param string $method
-     * @param array $_POST
+     * @param array $postData
      *
      * @return array|null
+     *
+     * @throws RuntimeException when cURL error occurred or API returned an error status code
      */
 
-
-    public static function doRequest($url, $method = 'GET', $post = [])
+    public static function doRequest(string $url, string $method = 'GET', array $postData = []): ?array
     {
         $method = strtoupper($method);
 
@@ -33,16 +34,12 @@ class UcrmApi
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
 
-        curl_setopt(
-            $ch,
-            CURLOPT_HTTPHEADER,
-            [
-                'Content-Type: application/json',
-                sprintf('X-Auth-App-Key: %s', $_ENV['API_KEY']),
-            ]
-        );
+        $headers = [
+            'Content-Type: application/json',
+            sprintf('X-Auth-App-Key: %s', $_ENV['API_KEY']),
+        ];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
@@ -50,30 +47,35 @@ class UcrmApi
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         }
 
-        if (!empty($post)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+        if (!empty($postData)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
         }
 
         $response = curl_exec($ch);
 
         if (curl_errno($ch) !== 0) {
-            throw new \Exception(sprintf('Eroare cURL: %s', curl_error($ch)));
+            throw new RuntimeException(sprintf('cURL error: %s', curl_error($ch)));
         }
 
-        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if ($status_code >= 400) {
-            $error_message = isset($response['message']) ? $response['message'] : 'Eroare API';
-            throw new \Exception(sprintf('%s (status code %d)', $error_message, $status_code));
+        if ($statusCode >= 400) {
+            $errorMessage = 'API error';
+            if ($response !== false) {
+                $errorData = json_decode($response, true);
+                if (isset($errorData['message'])) {
+                    $errorMessage = $errorData['message'];
+                }
+            }
+            throw new RuntimeException(sprintf('%s (status code %d)', $errorMessage, $statusCode));
         }
+
 
         curl_close($ch);
 
         return $response !== false ? json_decode($response, true) : null;
     }
 }
-
-
 
 // Setting unlimited time limit (updating lots of clients can take a long time).
 set_time_limit(0);

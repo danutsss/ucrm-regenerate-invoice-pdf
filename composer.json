@@ -18,7 +18,8 @@
 		"php": ">=7.1",
 		"ubnt/ucrm-plugin-sdk": "~0.4",
 		"vlucas/phpdotenv": "^5.5",
-		"psr/log": "^1.1"
+		"psr/log": "^1.1",
+		"twig/twig": "^3.5"
 	},
 	"config": {
 		"platform": {

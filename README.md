@@ -8,9 +8,6 @@ Read more about creating your own plugin in the [Developer documentation](../../
 
 ## Useful classes
 
-### `App\Service\TemplateRenderer`
-
-Very simple class to load a PHP template. When writing a PHP template be careful to use correct escaping function: `echo htmlspecialchars($string, ENT_QUOTES);`.
-
 ### UCRM Plugin SDK
+
 The [UCRM Plugin SDK](https://github.com/Ubiquiti-App/UCRM-Plugin-SDK) is used by this plugin. It contains classes able to help you with calling UCRM API, getting plugin's configuration and much more.
