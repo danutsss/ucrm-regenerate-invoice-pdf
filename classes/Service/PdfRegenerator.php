@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Twig\Environment;
 use App\Service\UcrmApi;
-
+use Twig\Loader\FilesystemLoader;
+use Ubnt\UcrmPluginSdk\Service\UcrmOptionsManager;
 
 class PdfRegenerator
 {
@@ -21,12 +23,18 @@ class PdfRegenerator
 
     public function generateView(array $invoices): void
     {
-        $renderer = new TemplateRenderer();
-        $renderer->render(
-            __DIR__ .
-                '/../../templates/pdf-regenerator.php',
+        // Instantiate Twig template renderer.
+        $loader = new FilesystemLoader(__DIR__ . '/../../templates');
+        $twig = new Environment($loader);
+
+        $optionsManager = UcrmOptionsManager::create();
+
+        echo $twig->render(
+            'pdf-regenerator.twig.html',
             [
+                'title' => 'Selecteaza facturi pentru regenerare',
                 'invoices' => $invoices,
+                'ucrmPublicUrl' => $optionsManager->loadOptions()->ucrmPublicUrl,
             ]
         );
     }

@@ -5,10 +5,11 @@ declare(strict_types=1);
 use App\Http;
 use Dotenv\Dotenv;
 use Psr\Log\LogLevel;
+use Twig\Environment;
 use App\Utility\Logger;
 use App\Service\UcrmApi;
 use App\Service\PdfRegenerator;
-use App\Service\TemplateRenderer;
+use Twig\Loader\FilesystemLoader;
 use Ubnt\UcrmPluginSdk\Service\UcrmSecurity;
 use Ubnt\UcrmPluginSdk\Security\PermissionNames;
 use Ubnt\UcrmPluginSdk\Service\PluginLogManager;
@@ -20,6 +21,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
+
+// Instantiate Twig template renderer.
+$loader = new FilesystemLoader(__DIR__ . '/templates');
+$twig = new Environment($loader);
 
 // Instantiate API connection.
 $api = new UcrmApi();
@@ -80,10 +85,10 @@ $organizations = $api::doRequest('organizations');
 
 $optionsManager = UcrmOptionsManager::create();
 
-$renderer = new TemplateRenderer();
-$renderer->render(
-    __DIR__ . '/templates/form.php',
+echo $twig->render(
+    'form.twig.html',
     [
+        'title' => 'Regenerare PDF facturi',
         'organizations' => $organizations,
         'ucrmPublicUrl' => $optionsManager->loadOptions()->ucrmPublicUrl,
     ]
