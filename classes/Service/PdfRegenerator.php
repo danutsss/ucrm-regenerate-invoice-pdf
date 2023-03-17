@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Service\UcrmApi;
 
-chdir(__DIR__);
 
 class PdfRegenerator
 {
@@ -17,7 +16,7 @@ class PdfRegenerator
 
     public function __construct(UcrmApi $ucrmApi)
     {
-        $this->ucrmApi = new UcrmApi();
+        $this->ucrmApi = $ucrmApi;
     }
 
     public function generateView(array $invoices): void
@@ -35,9 +34,9 @@ class PdfRegenerator
     public function regeneratePdf(int $invoiceId): void
     {
         try {
-            $this->ucrmApi::doRequest("invoices/$invoiceId/regenerate-pdf", 'PATCH');
+            $this->ucrmApi->doRequest("invoices/$invoiceId/regenerate-pdf", 'PATCH');
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
+            throw new \RuntimeException("Error regenerating PDF for invoice with ID $invoiceId: " . $e->getMessage(), 0, $e);
         }
     }
 }
