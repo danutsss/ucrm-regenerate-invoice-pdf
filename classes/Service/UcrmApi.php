@@ -76,3 +76,6 @@ class UcrmApi
         return $response !== false ? json_decode($response, true) : null;
     }
 }
+
+// Setting unlimited time limit (updating lots of clients can take a long time).
+set_time_limit(0);

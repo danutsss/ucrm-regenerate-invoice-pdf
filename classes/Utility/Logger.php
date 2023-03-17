@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utility;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerTrait;
+use Psr\Log\AbstractLogger;
 use Ubnt\UcrmPluginSdk\Service\PluginLogManager;
 
-final class Logger implements LoggerInterface
+final class Logger implements AbstractLogger
 {
     use LoggerTrait;
 
@@ -30,11 +30,7 @@ final class Logger implements LoggerInterface
             : '';
 
         $this->pluginLogManager->appendLog(
-            sprintf(
-                '%s%s',
-                $level,
-                $message,
-            ),
+            $level . $message,
             $context
         );
     }
