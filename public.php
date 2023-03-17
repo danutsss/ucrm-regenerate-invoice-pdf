@@ -75,11 +75,6 @@ if (array_key_exists('regenerate', $_GET)) {
             } else {
                 $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
             }
-
-            if ($response) {
-                $logger->log(\Psr\Log\LogLevel::ERROR, "Regenerarea PDF-ului facturii cu ID-ul $invoiceId executata cu succes.");
-                $logger->log(\Psr\Log\LogLevel::ERROR, $response);
-            }
         } catch (\Exception $e) {
             $logger->log(\Psr\Log\LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
             $logger->log(\Psr\Log\LogLevel::ERROR, $e->getMessage());
