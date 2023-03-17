@@ -6,12 +6,10 @@ namespace App\Service;
 
 class TemplateRenderer
 {
-    public function render(string $__template, array $__parameters): void
+    public function render(string $template, array $parameters): void
     {
-        foreach ($__parameters as $__name => $__value) {
-            ${$__name} = $__value;
-        }
+        extract($parameters, EXTR_SKIP);
 
-        require $__template;
+        require $template;
     }
 }
