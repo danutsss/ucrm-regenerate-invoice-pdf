@@ -6,10 +6,10 @@ namespace App\Utility;
 
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerTrait;
-use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
 use Ubnt\UcrmPluginSdk\Service\PluginLogManager;
 
-final class Logger implements AbstractLogger
+final class Logger implements LoggerInterface
 {
     use LoggerTrait;
 
