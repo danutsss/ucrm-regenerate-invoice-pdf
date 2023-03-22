@@ -29,7 +29,7 @@ class UcrmApi
             sprintf('%s/%s', $_ENV['API_URL'], $url)
         );
 
-        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 30000);
+        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
