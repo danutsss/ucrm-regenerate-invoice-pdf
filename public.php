@@ -65,7 +65,7 @@ if (isset($_GET['regenerate'])) {
     foreach ($invoiceIds as $invoiceId) {
         try {
             sleep($count % 100 === 0 ? 2 : 0);
-            $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
+            $response = $pdfRegenerator->regeneratePdf($invoiceId);
         } catch (\Exception $e) {
             $logger->log(LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
             $logger->log(LogLevel::ERROR, $e->getMessage());
