@@ -43,8 +43,6 @@ if (isset($_GET['organization']) && isset($_GET['since']) && isset($_GET['until'
         'createdDateFrom' => date_format(date_create($_GET['since']), 'Y-m-d'),
         'createdDateTo' => date_format(date_create($_GET['until']), 'Y-m-d'),
         'proforma' => 0,
-        'customAttributeKey' => 'factRegenerata',
-        'customAttributeValue' => '0',
     ];
 
     $pdfRegenerator = new PdfRegenerator($api);
@@ -65,7 +63,7 @@ if (isset($_GET['regenerate'])) {
     foreach ($invoiceIds as $invoiceId) {
         try {
             sleep($count % 100 === 0 ? 2 : 0);
-            $response = $pdfRegenerator->regeneratePdf($invoiceId);
+            $response = $pdfRegenerator->regeneratePdf(intval($invoiceId));
         } catch (\Exception $e) {
             $logger->log(LogLevel::ERROR, "Eroare la regenerarea PDF-ului facturii cu ID-ul $invoiceId.");
             $logger->log(LogLevel::ERROR, $e->getMessage());
