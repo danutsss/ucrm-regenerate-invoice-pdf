@@ -4,8 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b58bf570ce4dba8530581a5cb12f973",
+    "content-hash": "3baf6c1060484fc27f71d6750ede7c38",
     "packages": [
+        {
+            "name": "aaronddm/xml-builder",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AaronDDM/XMLBuilder.git",
+                "reference": "ceadf8bb3d4495d129cf78c4d2f84fb57b8ffb1f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AaronDDM/XMLBuilder/zipball/ceadf8bb3d4495d129cf78c4d2f84fb57b8ffb1f",
+                "reference": "ceadf8bb3d4495d129cf78c4d2f84fb57b8ffb1f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "ext-xmlwriter": "*",
+                "lib-libxml": ">=2.6.20",
+                "phpunit/phpunit": "^8.0",
+                "sabre/xml": "^1.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AaronDDM\\XMLBuilder\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron de Mello",
+                    "email": "aaron@aarondm.com"
+                }
+            ],
+            "description": "A simple PHP based XML builder",
+            "support": {
+                "issues": "https://github.com/AaronDDM/XMLBuilder/issues",
+                "source": "https://github.com/AaronDDM/XMLBuilder/tree/v2.0.3"
+            },
+            "time": "2022-10-14T19:07:59+00:00"
+        },
         {
             "name": "graham-campbell/result-type",
             "version": "v1.1.1",
@@ -454,25 +500,25 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.0.1",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.2 || ^8.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -501,9 +547,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
+                "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2023-04-04T09:50:52+00:00"
         },
         {
             "name": "psr/log",

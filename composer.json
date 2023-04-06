@@ -19,7 +19,8 @@
 		"ubnt/ucrm-plugin-sdk": "~0.4",
 		"vlucas/phpdotenv": "^5.5",
 		"psr/log": "^1.1",
-		"twig/twig": "^3.5"
+		"twig/twig": "^3.5",
+		"aaronddm/xml-builder": "^2.0"
 	},
 	"config": {
 		"platform": {
